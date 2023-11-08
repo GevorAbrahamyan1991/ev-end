@@ -1,4 +1,5 @@
 import React from "react";
+import { ThemeProvider, useTheme } from "./ThemContext";
 import {
   Navbar,
   Collapse,
@@ -9,6 +10,8 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 
 import Logo from "../../assets/img/download.png";
+import LogoDark from "../../assets/img/1.png";
+import ThemeSwitch from "./ThemeSwitch";
 
 const menuList = [
   {
@@ -34,7 +37,7 @@ function NavList() {
             <Typography
               as="li"
               variant="small"
-              className="p-1 text-xl font-bold text-black"
+              className="p-1 text-xl font-bold transition-all duration-300 text-themeDark dark:text-themeLight"
               key={index}
             >
               <Link
@@ -52,6 +55,7 @@ function NavList() {
 
 export default function Header() {
   const [openNav, setOpenNav] = React.useState(false);
+  const { theme } = useTheme();
 
   const handleWindowResize = () =>
     window.innerWidth >= 960 && setOpenNav(false);
@@ -67,9 +71,17 @@ export default function Header() {
     <>
       <Navbar className="max-w-screen-xl px-6 py-3 mx-auto">
         <div className="flex items-center justify-between text-blue-gray-900">
-          <img src={Logo} alt="" />
-          <div className="hidden lg:block">
+          <div className="flex items-center h-16">
+            {theme == "light" ? (
+              <img src={Logo} alt="" />
+            ) : (
+              <img src={LogoDark} alt="" />
+            )}
+          </div>
+
+          <div className="hidden lg:flex lg:items-center">
             <NavList />
+            <ThemeSwitch />
           </div>
           <IconButton
             variant="text"
