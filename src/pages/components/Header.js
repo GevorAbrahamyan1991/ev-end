@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ThemeProvider, useTheme } from "./ThemContext";
+import { Context } from "../Multilanguage/wrapper";
 import {
   Navbar,
   Collapse,
@@ -12,23 +13,24 @@ import { Link } from "react-router-dom";
 import Logo from "../../assets/img/download.png";
 import LogoDark from "../../assets/img/1.png";
 import ThemeSwitch from "./ThemeSwitch";
+import Lang from "../Multilanguage/SetLang";
+import { FormattedMessage } from "react-intl";
 
 const menuList = [
   {
-    label: "Home",
+    label: "nav_home",
     href: "",
   },
   {
-    label: "About",
+    label: "nav_about",
     href: "/about",
   },
   {
-    label: "News",
+    label: "nav_news",
     href: "/news",
   },
 ];
-
-function NavList() {
+function NavList({ locale }) {
   return (
     <ul className="flex flex-col gap-2 my-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
       {menuList &&
@@ -37,14 +39,18 @@ function NavList() {
             <Typography
               as="li"
               variant="small"
-              className="p-1 text-xl font-bold transition-all duration-300 text-themeDark dark:text-themeLight"
+              className={
+                locale === "am"
+                  ? "p-1 text-md font-bold transition-all duration-300 text-themeDark dark:text-themeLight"
+                  : "p-1 text-xl font-bold transition-all duration-300 text-themeDark dark:text-themeLight"
+              }
               key={index}
             >
               <Link
                 to={item.href}
                 className="flex items-center transition-colors hover:text-blue-500"
               >
-                {item.label}
+                <FormattedMessage id={item.label} />
               </Link>
             </Typography>
           );
@@ -54,6 +60,7 @@ function NavList() {
 }
 
 export default function Header() {
+  const { locale } = useContext(Context);
   const [openNav, setOpenNav] = React.useState(false);
   const { theme } = useTheme();
 
@@ -80,8 +87,9 @@ export default function Header() {
           </div>
 
           <div className="hidden lg:flex lg:items-center">
-            <NavList />
+            <NavList locale={locale} />
             <ThemeSwitch />
+            <Lang />
           </div>
           <IconButton
             variant="text"
@@ -97,7 +105,7 @@ export default function Header() {
           </IconButton>
         </div>
         <Collapse open={openNav}>
-          <NavList />
+          <NavList locale={locale} />
         </Collapse>
       </Navbar>
     </>
